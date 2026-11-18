@@ -1,45 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-import '../services/session_service.dart';
+import '../controllers/login_controller.dart';
 import '../theme/app_theme.dart';
-import 'main_page.dart';
 
-const String nim = '124240151';
-
-class LoginPage extends StatefulWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _userCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  bool _obscure = true;
-  bool _loading = false;
-
-  @override
-  void dispose() {
-    _userCtrl.dispose();
-    _passCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _login() async {
-    if (_loading) return;
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _loading = true);
-    await SessionService.login(_userCtrl.text.trim());
-    if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const MainPage()),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 18),
                       const Text(
-                        'E-Commerce',
+                        'Shopedia',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
@@ -88,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Belanja apa saja, kapan saja.',
+                        'Belanja mudah, kapan saja.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.85),
@@ -102,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: Form(
-                          key: _formKey,
+                          key: controller.formKey,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,66 +84,65 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 4),
                               const Text(
-                                'Masukkan username dan password kamu.',
+                                'Masukkan email dan password kamu.',
                                 style: TextStyle(color: AppTheme.muted),
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
-                                controller: _userCtrl,
+                                controller: controller.emailCtrl,
+                                keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
-                                autofillHints: const [AutofillHints.username],
+                                autofillHints: const [AutofillHints.email],
                                 decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.person_outline),
-                                  labelText: 'Username',
+                                  prefixIcon: Icon(Icons.email_outlined),
+                                  labelText: 'Email',
                                 ),
-                                validator: (v) =>
-                                    (v == null || v.trim().isEmpty)
-                                    ? 'Username wajib diisi'
-                                    : null,
+                                validator: controller.validateEmail,
                               ),
                               const SizedBox(height: 14),
-                              TextFormField(
-                                controller: _passCtrl,
-                                obscureText: _obscure,
-                                textInputAction: TextInputAction.done,
-                                onFieldSubmitted: (_) => _login(),
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(Icons.lock_outline),
-                                  labelText: 'Password',
-                                  suffixIcon: IconButton(
-                                    tooltip: _obscure
-                                        ? 'Tampilkan password'
-                                        : 'Sembunyikan password',
-                                    icon: Icon(
-                                      _obscure
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
+                              Obx(
+                                () => TextFormField(
+                                  controller: controller.passCtrl,
+                                  obscureText: controller.obscure.value,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => controller.login(),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.lock_outline),
+                                    labelText: 'Password',
+                                    suffixIcon: IconButton(
+                                      tooltip: controller.obscure.value
+                                          ? 'Tampilkan password'
+                                          : 'Sembunyikan password',
+                                      icon: Icon(
+                                        controller.obscure.value
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                      ),
+                                      onPressed: () =>
+                                          controller.obscure.value =
+                                              !controller.obscure.value,
                                     ),
-                                    onPressed: () =>
-                                        setState(() => _obscure = !_obscure),
                                   ),
+                                  validator: controller.validatePass,
                                 ),
-                                validator: (v) {
-                                  final value = v?.trim() ?? '';
-                                  if (value.isEmpty)
-                                    return 'Password wajib diisi';
-                                  if (value != nim) return 'Password salah';
-                                  return null;
-                                },
                               ),
                               const SizedBox(height: 24),
-                              FilledButton(
-                                onPressed: _loading ? null : _login,
-                                child: _loading
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : const Text('Login'),
+                              Obx(
+                                () => FilledButton(
+                                  onPressed: controller.loading.value
+                                      ? null
+                                      : controller.login,
+                                  child: controller.loading.value
+                                      ? const SizedBox(
+                                          width: 22,
+                                          height: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text('Login'),
+                                ),
                               ),
                             ],
                           ),

@@ -1,20 +1,20 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionService {
-  static const _key = 'username';
+  static const _keyEmail = 'email';
 
-  static Future<void> login(String username) async {
+  static Future<void> login(String email) async {
     final p = await SharedPreferences.getInstance();
-    await p.setString(_key, username);
+    await p.setString(_keyEmail, email);
   }
 
-  static Future<String?> getUsername() async {
+  static Future<String?> getEmail() async {
     final p = await SharedPreferences.getInstance();
-    return p.getString(_key);
+    return p.getString(_keyEmail);
   }
 
   static Future<void> logout() async {
     final p = await SharedPreferences.getInstance();
-    await p.remove(_key);
+    await p.remove(_keyEmail);
   }
 }

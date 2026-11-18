@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // ===== PALET WARNA =====
-  static const Color seed = Color(0xFF4F46E5); // indigo (warna utama)
-  static const Color primaryDark = Color(0xFF3730A3);
-  static const Color primaryLight = Color(0xFF7C74F5);
+  static const Color seed = Color(0xFF2E7D32); // hijau (warna utama)
+  static const Color primaryDark = Color(0xFF1B5E20);
+  static const Color primaryLight = Color(0xFF4CAF50);
 
-  static const Color background = Color(0xFFF5F6FB);
-  static const Color border = Color(0xFFE4E6F1);
-  static const Color soft = Color(0xFFEEF0FA);
+  static const Color background = Color(0xFFF3F7F3);
+  static const Color border = Color(0xFFDDE7DD);
+  static const Color soft = Color(0xFFEBF2EB);
 
-  static const Color ink = Color(0xFF1F2340); // teks utama
-  static const Color muted = Color(0xFF6B7194); // teks sekunder
-  static const Color mutedLight = Color(0xFFB4B8D0); // ikon/empty state
+  static const Color ink = Color(0xFF1B2B1F); // teks utama
+  static const Color muted = Color(0xFF62736A); // teks sekunder
+  static const Color mutedLight = Color(0xFFB0BDB3); // ikon/empty state
 
   static const Color danger = Color(0xFFE5484D);
   static const Color success = Color(0xFF16A34A);
@@ -116,7 +116,7 @@ class AppTheme {
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
-        actionTextColor: const Color(0xFFA5B4FC),
+        actionTextColor: const Color(0xFFA5D6A7),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
